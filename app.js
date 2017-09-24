@@ -57,8 +57,9 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
     });
 });
 
-
-app.use('/',require('./a.html'));
+app.get("/", function(req, res) {
+    res.send("Heroku Demo!");
+});
 
 
 //
