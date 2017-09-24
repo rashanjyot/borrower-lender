@@ -1,34 +1,81 @@
+//
+//
+// var http=require('http');
+//
+// var qs = require('querystring');
+// function  onRequest(req,res) {
+//
+//
+//     // if (req.url === '/favicon.ico') {
+//     //     res.writeHead(200, {'Content-Type': 'image/x-icon'} );
+//     //
+//     //     res.status(204);
+//     //     res.end();
+//     //     console.log('favicon requested');
+//     //     return;
+//     // }
+//
+//
+//
+//     res.writeHead(200,{'Content-Type':'text/plain'});
+//     res.write("hi hi hi");
+//     res.end();
+//
+//     if(req.method=='POST')
+//     {
+//
+//       if(req.url==='/bSignUp')
+//       {
+//
+//           var body='';
+//           req.on('data', function (data) {
+//               body +=data;
+//
+//           });
+//           req.on('end',function(){
+//               var POST =  qs.parse(body);
+//               console.log(POST);
+//           });
+//       }
+//
+//
+//     }
+//     else if(req.method=='GET')
+//     {
+//
+//
+//     }
+//
+//
+//
+//
+//
+//
+// }
+//
+// http.createServer(onRequest).listen(process.env.PORT || 8055);
+//
+//
 
 
-var http=require('http');
-function  onRequest(req,res) {
 
+var express = require('express')
+var app = express()
 
-    // if (req.url === '/favicon.ico') {
-    //     res.writeHead(200, {'Content-Type': 'image/x-icon'} );
-    //
-    //     res.status(204);
-    //     res.end();
-    //     console.log('favicon requested');
-    //     return;
-    // }
+app.set('port', (process.env.PORT || 5000))
+app.use(express.static(__dirname + '/public'))
 
+app.get('/', function(request, response) {
+    response.send('Hello World!')
+})
 
-    res.writeHead(200,{'Content-Type':'text/plain'});
-    res.write("hi hi hi");
-    res.end();
-
-
-}
-
-http.createServer(onRequest).listen(process.env.PORT || 8055);
+app.listen(app.get('port'), function() {
+    console.log("Node app is running at localhost:" + app.get('port'))
+})
 
 
 
-
-
-
-
+//
 //
 // var favicon = require('serve-favicon');
 //

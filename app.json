@@ -1,5 +1,6 @@
 {
   "name":"borrower-lender",
   "repository":"https://git.heroku.com/borrower-lender.git",
+  "logo": "https://rawgit.com/heroku/node-js-sample/master/public/node.svg",
   "keywords":["node","express","heroku"]
 }
