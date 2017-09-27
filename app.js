@@ -125,11 +125,30 @@ app.get('/bSignIn',function (req,res) {
 
 app.post('/bSignIn',urlencodedParser,function (req,res) {
 
+    var dummy = mongoose.model('borrower', bSchema);
+
+// find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+    dummy.findOne({ 'email': req.body.email }, function (err, person) {
+        if(person===null)
+            res.sendFile(__dirname+'/public/bSignIn.html');
+        else
+        {
+            console.log('%s %s is a %s.', person.name, person.email, person.password) // Space Ghost is a talk show host.
+            if(person.password===req.body.password)
+            {
+
+            }
+        }
+        if (err) res.end("Error");
+
+
+
+
+    })
 
 })
 
 app.get('/lSignIn',function (req,res) {
-    //res.render('index.html',{});
     res.sendFile(__dirname+'/public/lSignIn.html')
 
 })
