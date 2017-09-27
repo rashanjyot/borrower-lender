@@ -1,11 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello</title>
+    <title>Borrower Lender</title>
 
 </head>
+
+<script>
+    function call(bool) {
+            var radioButtons=document.getElementsByClassName('rad');
+        var buttons=document.getElementsByClassName('but');
+            if(radioButtons[0].checked===true)
+            {
+                if(bool)
+                {
+                    window.location.href="./bSignIn";
+                }
+                else
+                {
+                    window.location.href="./bSignUp";
+                }
+            }
+            else if(radioButtons[1].checked===true)
+            {
+                if(bool)
+                {
+                    window.location.href="./lSignIn"
+                }
+                else
+                {
+                    window.location.href="./lSignUp"
+                }
+            }
+
+    }
+</script>
 <body>
-<h1>jhirhg</h1>
+
+
+<input class="rad" type="radio" name="userType" value="b" checked> Borrower<br>
+<input class="rad" type="radio" name="userType" value="l"> Lender<br>
+<!--<input type="button" value="Sign In" onclick="window.location.href='./signIn';"/>-->
+<!--<input type="button" value="Sign Up" onclick="window.location.href='./signUp';"/>-->
+<input  class="but" type="button" value="Sign In" onclick="call(true)"/>
+<input class="but" type="button" value="Sign Up" onclick="call(false)"/>
+
+
+
 
 </body>
 </html>

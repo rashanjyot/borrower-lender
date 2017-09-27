@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Borrower Sign Up</title>
+    <script>
+
+        function check() {
+            var ele=document.getElementById('bSignUpForm').elements;
+            if((ele[2].value===ele[3].value))
+            return true;
+            else
+            {
+                ele[2].value = "";
+                ele[3].value="";
+                return false;
+            }
+
+        }
+    </script>
+</head>
+<body>
+
+
+<form id="bSignUpForm" method="POST" action="/bSignUp" onsubmit="return check()">
+
+   Name: <input type="text" name="name"/>
+    Email: <input type="email" name="email"/>
+   Password(min 6 digits): <input type="password" name="password" minlength="6"/>
+   Confirm Password: <input type="password" name="password1" minlength="6"/>
+    Submit:<input type="submit" name="submit"/>
+
+
+</form>
+
+
+
+
+</body>
+</html>
