@@ -9,28 +9,24 @@
     function call(bool) {
             var radioButtons=document.getElementsByClassName('rad');
         var buttons=document.getElementsByClassName('but');
+        var string="";
             if(radioButtons[0].checked===true)
             {
-                if(bool)
-                {
-                    window.location.href="./bSignIn";
-                }
-                else
-                {
-                    window.location.href="./bSignUp";
-                }
+                string+="./borrower"
+
             }
-            else if(radioButtons[1].checked===true)
-            {
-                if(bool)
-                {
-                    window.location.href="./lSignIn"
-                }
-                else
-                {
-                    window.location.href="./lSignUp"
-                }
+            else  {
+                string += "./lender"
             }
+        if(bool)
+        {
+            string+="/signIn";
+        }
+        else
+        {
+            string+="/signUp";
+        }
+        window.location.href=string;
 
     }
 </script>
