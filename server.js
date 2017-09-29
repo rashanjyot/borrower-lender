@@ -9,7 +9,7 @@ var jwt=require('jsonwebtoken');
 
 
 
-////////// section to import self created modules
+
 
 var mongoose=require('mongoose');
 var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/HelloMongoose';
@@ -28,8 +28,13 @@ app.use(express.static(__dirname + '/public'))
 
 
 
+////////// section to import self created modules
+var borrower=require('./borrower')
+app.use('/borrower',borrower);
+
+
+
 app.get('/', function(request, response) {
-    console.log("RJ");
 
     response.send('Hello World!')
 })
