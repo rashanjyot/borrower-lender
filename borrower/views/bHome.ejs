@@ -5,14 +5,20 @@
     <title>Borrower Home</title>
 </head>
 
+<script>
+    function call() {
+        window.location.href="./crList";
+    }
+
+</script>
 
 
 <body>
 
 
 
-
-<form id="creditRequestForm" method="POST" action="/crRequest">
+<h1>New Credit Request</h1>
+<form id="creditRequestForm" method="POST" action="./crRequest">
 
 
     Amount :<input type="number" name="amount" min="0"/>
@@ -20,13 +26,14 @@
     Submit:<input type="submit" name="submit"/>
 
 </form>
-<script>
-    document.onload=function () {
-        if("<%= token%>"!==undefined)
-            document.cookie="token=" + "<%=token%>";
-    }
 
-</script>
+<br>
+<br>
+
+<h1>Previous Requests List</h1>
+<input  class="but" type="button" value="My Credit Requests List" onclick="call()"/>
+
+
 
 </body>
 </html>
