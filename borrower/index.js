@@ -27,7 +27,11 @@ router.all('*',function (req, res,next) {
 
             if(decoded!=undefined){
                 res.locals.tokenFlag=true;
-                res.locals.xtoken=decoded;
+                // res.locals.xtoken=decoded;
+               res.locals.obj=getUser(decoded);
+
+
+
             }
 
             else
@@ -42,7 +46,7 @@ router.all('*',function (req, res,next) {
     else
         res.locals.tokenFlag=false;
 
-    console.log(res.locals.tokenFlag);
+
     next();
 })
 
@@ -54,19 +58,25 @@ router.get('/', function(req, res) {
 
 
 router.get('/signIn',function (req,res,next) {
-    if(res.locals.tokenFlag)
+    if(res.locals.tokenFlag )
     {
         res.redirect('./home');
-        next();
-    }
+        return next();
 
-    console.log(__dirname);
-    res.sendFile(__dirname+'/views/bSignIn.html')
+
+    }
+     {
+
+        console.log(__dirname);
+        res.sendFile(__dirname + '/views/bSignIn.html')
+
+    }
 
 
 })
 
 router.post('/signIn',urlencodedParser,function (req,res) {
+
 
     var dummy = mongoose.model('borrower', bSchema);
 
@@ -112,13 +122,78 @@ router.post('/signIn',urlencodedParser,function (req,res) {
 
 router.get('/home',function (req,res) {
     res.render(__dirname+'/views/bHome');
+
 })
 
 
 router.post('/crRequest',urlencodedParser,function (req,res) {
 
 
+
+
+
+    if(res.locals.tokenFlag)
+    {
+        if(req.body.amount<=res.locals.obj.crLimit)
+        {
+            var dummy = mongoose.model('borrower', bSchema);
+            dummy.findById(res.locals.obj._id, function (err, per) {
+                if (err) return handleError(err);
+
+                per.crLimit = per.crLimit-req.body.amount;
+                per.save(function (err, updatedPer) {
+                    if (err) return handleError(err);
+                    res.locals.obj=updatedPer;
+
+                    res.end("Credit Request Accepted")
+                });
+            });
+        }
+        else
+        {
+            res.end("Could not complete Credit Request as Amount Exceeded");
+        }
+    }
+    else
+    {
+
+    }
+
+
+
 })
+
+
+
+
+
+function getUser(object) {
+
+
+    var dummy = mongoose.model('borrower', bSchema);
+var d="";
+// find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+    dummy.findOne({ 'email': object.email }, function (err, person) {
+
+
+        if(person===null) {
+
+            return null;
+        }
+        else
+        {
+            console.log(JSON.stringify(person))
+            return person;
+
+        }
+        if (err) return null;
+
+
+
+
+    })
+
+}
 
 
 module.exports = router;
