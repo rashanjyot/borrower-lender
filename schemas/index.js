@@ -19,6 +19,26 @@ var lSchema = new mongoose.Schema({
 
 });
 
+
+
+
+var creditRequestSchema=new mongoose.Schema(
+    {
+        amount:{type: Number, min:0},
+        repayDate:{type:Date},
+        isRepaymentDone:{type:Boolean, default:false}
+    }
+)
+
+var creditRecordSchema=new mongoose.Schema(
+    {
+        email:{type: String,  index: true, unique: true},
+        records:[creditRequestSchema]
+
+    }
+)
+
+
 // exports.lSchema=lSchema;
 // exports.bSchema=bSchema;
 
@@ -30,4 +50,6 @@ var lSchema = new mongoose.Schema({
 
 Schema.prototype.bSchema=bSchema;
     Schema.prototype.lSchema=lSchema;
+    Schema.prototype.creditRecordSchema=creditRecordSchema;
+Schema.prototype.creditRequestSchema=creditRequestSchema;
     module.exports=Schema;

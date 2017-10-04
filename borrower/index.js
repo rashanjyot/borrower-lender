@@ -4,15 +4,18 @@ var bodyparser=require('body-parser');
 var urlencodedParser=bodyparser.urlencoded({extended:false});
 var mongoose=require('mongoose');
 var bSchema=require('../schemas').prototype.bSchema;
+var creditRecordSchema=require('../schemas').prototype.creditRecordSchema;
+var creditRequestSchema=require('../schemas').prototype.creditRequestSchema;
 var jwt=require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
+var async=require('async');
 
 router.use(cookieParser());
 
 //for authentication purpose
 router.all('*',function (req, res,next) {
   //  console.log("Intercepted");
-    //console.log(req.cookies.xtoken);
+
 
     if(req.cookies.xtoken!=undefined)
     {
@@ -21,14 +24,29 @@ router.all('*',function (req, res,next) {
             if(err)
             {
                 res.locals.tokenFlag=false;
-                next();
+                return next();
             }
 
 
             if(decoded!=undefined){
                 res.locals.tokenFlag=true;
                 // res.locals.xtoken=decoded;
-               res.locals.obj=getUser(decoded);
+               //res.locals.obj=getUser(decoded,);
+
+                getUser(decoded,function (result) {
+                    if(result!==null)
+                    {
+                        res.locals.obj=result;
+                        return next();
+                    }
+
+                })
+
+
+
+
+
+
 
 
 
@@ -37,17 +55,17 @@ router.all('*',function (req, res,next) {
             else
             {
                 res.locals.tokenFlag=false;
-                next();
+                return next();
             }
 
         });
 
     }
-    else
+    else{
         res.locals.tokenFlag=false;
 
 
-    next();
+   return next();}
 })
 
 /* GET home page. */
@@ -64,10 +82,9 @@ router.get('/signIn',function (req,res,next) {
         return next();
 
 
-    }
+    }else
      {
 
-        console.log(__dirname);
         res.sendFile(__dirname + '/views/bSignIn.html')
 
     }
@@ -121,7 +138,11 @@ router.post('/signIn',urlencodedParser,function (req,res) {
 
 
 router.get('/home',function (req,res) {
+
+    if(res.locals.tokenFlag)
     res.render(__dirname+'/views/bHome');
+    else
+        redirectToSignIn(res);
 
 })
 
@@ -145,6 +166,42 @@ router.post('/crRequest',urlencodedParser,function (req,res) {
                     if (err) return handleError(err);
                     res.locals.obj=updatedPer;
 
+
+                    var dum=mongoose.model('credit_records',creditRecordSchema);
+                    dum.findOne({email: res.locals.obj.email}, function(err, creditRecord) {
+                        if(!err) {
+                            if(!creditRecord) {
+
+                                creditRecord=new dum({
+                                    email : res.locals.obj.email,
+                                    records:[]
+                                })
+
+
+                            }
+
+
+                            var d = mongoose.model('credit_request', creditRequestSchema);
+
+                            var dumm = new d({
+                                amount: req.body.amount,
+                                repayDate: req.body.repayDate,
+                                isRepaymentDone:false
+                            });
+
+                            creditRecord.records.push(dumm);
+
+                            creditRecord.save(function(err) {
+                                if(!err) {
+                                        console.log("Saved");
+                                }
+                                else {
+                                    console.log("Error: could not save");
+                                }
+                            });
+                        }
+                    });
+                    console.log(JSON.stringify(res.locals.obj))
                     res.end("Credit Request Accepted")
                 });
             });
@@ -156,7 +213,7 @@ router.post('/crRequest',urlencodedParser,function (req,res) {
     }
     else
     {
-
+        redirectToSignIn(res);
     }
 
 
@@ -165,9 +222,36 @@ router.post('/crRequest',urlencodedParser,function (req,res) {
 
 
 
+router.get('/crList',function (req,res) {
+    if(res.locals.tokenFlag)
+    {
+        var dum=mongoose.model('credit_records',creditRecordSchema);
+        dum.findOne({email: res.locals.obj.email}, function(err, creditRecord) {
+            if(!err) {
+                if(!creditRecord) {
+                    res.end("No Previous Records");
+                }
+                else
+                {
+                   res.end( JSON.stringify(creditRecord.records));
+                }
+
+            }
+        });
+    }
+    else
+    {
+        redirectToSignIn(res);
+    }
+
+})
 
 
-function getUser(object) {
+
+
+
+
+function getUser(object,callback) {
 
 
     var dummy = mongoose.model('borrower', bSchema);
@@ -178,15 +262,15 @@ var d="";
 
         if(person===null) {
 
-            return null;
+            callback(null)
         }
         else
         {
             console.log(JSON.stringify(person))
-            return person;
+            callback(person)
 
         }
-        if (err) return null;
+        if (err) callback(null);
 
 
 
@@ -194,6 +278,15 @@ var d="";
     })
 
 }
+
+
+function redirectToSignIn(r)
+{
+    r.redirect('./signIn');
+}
+
+
+
 
 
 module.exports = router;
