@@ -8,7 +8,7 @@ var creditRecordSchema=require('../schemas').prototype.creditRecordSchema;
 var creditRequestSchema=require('../schemas').prototype.creditRequestSchema;
 var jwt=require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
-var async=require('async');
+
 
 router.use(cookieParser());
 
@@ -248,6 +248,44 @@ router.get('/crList',function (req,res) {
 
 
 
+router.post('/signUp',urlencodedParser,function (req,res) {
+
+
+
+
+        var bUser = mongoose.model('borrower', bSchema);
+
+        var dummy = new bUser({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            crLimit: 100000
+        });
+
+        // Saving it to the database.
+        dummy.save(function (err) {
+            if (err) {
+                console.log('Error on save!')
+                res.end("Information inappropriate. Try Again");
+            }
+            else {
+                res.end("New Record created successfully");
+            }
+
+        });
+
+
+})
+
+
+router.get('/signUp',function (req,res) {
+
+    if(res.locals.tokenFlag)
+        redirectToHome(res);
+    else
+    res.render(__dirname+'/views/bSignUp',{});
+})
+
 
 
 
@@ -255,7 +293,7 @@ function getUser(object,callback) {
 
 
     var dummy = mongoose.model('borrower', bSchema);
-var d="";
+
 // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
     dummy.findOne({ 'email': object.email }, function (err, person) {
 
@@ -280,9 +318,16 @@ var d="";
 }
 
 
+
+
 function redirectToSignIn(r)
 {
     r.redirect('./signIn');
+}
+
+function redirectToHome(r)
+{
+    r.redirect('./home');
 }
 
 

@@ -32,6 +32,9 @@ app.use(express.static(__dirname + '/public'))
 var borrower=require('./borrower')
 app.use('/borrower',borrower);
 
+var lender=require('./lender')
+app.use('/lender',lender);
+
 
 
 app.get('/', function(request, response) {
