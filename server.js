@@ -9,7 +9,8 @@ var urlencodedParser=bodyparser.urlencoded({extended:false});
 var jwt=require('jsonwebtoken');
 
 var mongoose=require('mongoose');
-var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/HelloMongoose';
+var uristring="mongodb://rashanjyot:Qwertyboard@cluster0-shard-00-00-hltcr.mongodb.net:27017,cluster0-shard-00-01-hltcr.mongodb.net:27017,cluster0-shard-00-02-hltcr.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";
+//var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/HelloMongoose';
 mongoose.connect(uristring, function (err, res) {
     if (err) {
         console.log ('ERROR connecting to: ' + uristring + '. ' + err);
